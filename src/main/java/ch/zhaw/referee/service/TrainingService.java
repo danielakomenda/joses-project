@@ -12,7 +12,9 @@ import ch.zhaw.referee.repository.TrainingRepository;
 import ch.zhaw.referee.repository.VerbandRepository;
 import ch.zhaw.referee.model.Mail;
 import ch.zhaw.referee.model.Schiedsrichter;
+import ch.zhaw.referee.model.SchiedsrichterToTrainingList;
 import ch.zhaw.referee.model.Training;
+import ch.zhaw.referee.model.TrainingToSchiedsrichterList;
 import ch.zhaw.referee.model.TrainingState;
 import ch.zhaw.referee.model.Verband;
 
@@ -57,9 +59,9 @@ public class TrainingService {
     // Teilt ein Schiedsrichter einem Training zu
     // Wird die Mindest-Teilnehmerzahl erreicht oder überschritten, wird das
     // Training definitiv durchgeführt
-    public Optional<Training> assigneMeToTraining(String trainingId, String MitgliedEmail) {
+    public Optional<Training> assigneMeToTraining(String trainingId, String SchiedsrichterEmail) {
         Optional<Training> trainingToAssign = trainingRepository.findById(trainingId);
-        Schiedsrichter mitglied = schiedsrichterRepository.findFirstByEmail(MitgliedEmail);
+        Schiedsrichter schiedsrichter = schiedsrichterRepository.findFirstByEmail(SchiedsrichterEmail);
         
         if (trainingToAssign.isPresent()) {
             Training training = trainingToAssign.get();
@@ -67,15 +69,20 @@ public class TrainingService {
             if (training.getTrainingState() == TrainingState.NEU
                     || training.getTrainingState() == TrainingState.DEFINITIV) {
 
-                if (mitglied != null) {
-                    training.addParticipant(mitglied);
+                if (schiedsrichter != null) {
+
+                    SchiedsrichterToTrainingList schiriToAdd = new SchiedsrichterToTrainingList(schiedsrichter.getId(), schiedsrichter.getName(), schiedsrichter.getEmail(), schiedsrichter.getLevel());
+                    TrainingToSchiedsrichterList trainingToAdd = new TrainingToSchiedsrichterList(training.getId(), training.getTrainingType(), training.getDescription(), training.getLocation(), training.getDate(), training.getMinLevel(), training.getVerbandId());
+
+                    training.addParticipant(schiriToAdd);
+                    schiedsrichter.addTraining(trainingToAdd);
 
                     if (training.getTrainingState() == TrainingState.NEU) {
-                        sendConfirmationForRegistrationProv(training, MitgliedEmail);
+                        sendConfirmationForRegistrationProv(training, SchiedsrichterEmail);
                     }
 
                     else if (training.getTrainingState() == TrainingState.DEFINITIV) {
-                        sendConfirmationForRegistrationDef(training, MitgliedEmail);
+                        sendConfirmationForRegistrationDef(training, SchiedsrichterEmail);
                     }
 
                     if (training.getParticipants().size()>= training.getMinParticipants()
@@ -85,6 +92,7 @@ public class TrainingService {
                     }
 
                     trainingRepository.save(training);
+                    schiedsrichterRepository.save(schiedsrichter);
                     return Optional.of(training);
                 }
             }
@@ -96,9 +104,9 @@ public class TrainingService {
     // Sendet allen angemeldeten Benutzern eine Bestätigungsemail,
     // Falls sich der TrainingState auf DEFINITIV ändert
     public void sendConfirmationMailToAll(Training training) {
-        ArrayList<Schiedsrichter> participants = training.getParticipants();
+        ArrayList<SchiedsrichterToTrainingList> participants = training.getParticipants();
         
-        for (Schiedsrichter teilnehmer : participants) {
+        for (SchiedsrichterToTrainingList teilnehmer : participants) {
             String subject = training.getDescription();
             String message = "Das Training " + subject + " findet definitiv statt. Vielen Dank für Deine Anmeldung. Wir freuen uns auf das Training.";
             mail.setSubject(subject);

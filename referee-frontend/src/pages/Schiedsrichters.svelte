@@ -6,8 +6,8 @@
     let schiedsrichters = [];
     let schiedsrichter = {
         id: null,
-        email: null,
         name: null,
+        email: null,
         level: null,
     };
 
@@ -28,6 +28,7 @@
             });
     }
     getSchiedsrichters();
+
 
     function createSchiedsrichter() {
         var config = {
@@ -50,6 +51,7 @@
             });
     }
 </script>
+
 
 <h1 class="mt-3">Schiedsrichter</h1>
 <form class="mb-5">

@@ -1,10 +1,10 @@
 package ch.zhaw.referee.model;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -25,17 +25,11 @@ public class Schiedsrichter {
     @NonNull
     private String email;
     @NonNull
-    private int level; 
+    private int level;
 
-    
-    private ArrayList<Training> trainings = new ArrayList<>();
+    private ArrayList<TrainingToSchiedsrichterList> trainings = new ArrayList<>();
 
-
-    public void addTraining(Training training){
+    public void addTraining(TrainingToSchiedsrichterList training) {
         trainings.add(training);
-    }
-
-    public int getNumberOfTrainings() {
-        return trainings.size();
     }
 }

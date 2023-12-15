@@ -14,8 +14,12 @@
     location: null,
     trainingType: null,
     minLevel: null,
+    minParticipants: null,
     date: null,
+    participants: null
   };
+  
+  let numberOfParticipants = 0;
 
   function getTrainings() {
     console.log(trainings_id)
@@ -28,6 +32,11 @@
       .then(function (response) {
         training = response.data;
         training.date = training.date.split("T")[0];
+        if (Array.isArray(training.participants)) {
+        numberOfParticipants = training.participants.length;
+      } else {
+        numberOfParticipants = 0;
+      }
       })
       .catch(function (error) {
         alert("Noch keine Trainings erfasst");
@@ -45,6 +54,10 @@
   <p>{training.date}</p>
   <p><b>Trainingsart:</b></p>
   <p>{training.trainingType}</p>
-  <p><b>Qualifikation:</b></p>
+  <p><b>Mindest-Qualifikation:</b></p>
   <p>{training.minLevel}</p>
+  <p><b>Anzahl Teilnehmer:</b></p>
+  <p>{training.minParticipants}</p>
+  <p><b>Anzahl Teilnehmer:</b></p>
+  <p>{numberOfParticipants}</p>
 </div>

@@ -7,6 +7,8 @@ import java.util.List;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
@@ -39,9 +41,9 @@ public class Training {
 
     private TrainingState trainingState = TrainingState.NEU;
 
-    private ArrayList<Schiedsrichter> participants = new ArrayList<>();
+    private ArrayList<SchiedsrichterToTrainingList> participants = new ArrayList<>();
 
-    public void addParticipant(Schiedsrichter schiedsrichter){
+    public void addParticipant(SchiedsrichterToTrainingList schiedsrichter){
         participants.add(schiedsrichter);
     }
 }

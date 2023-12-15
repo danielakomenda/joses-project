@@ -5,12 +5,14 @@
   const api_root = window.location.origin;
 
   let trainings = [];
+  
   let training = {
     description: null,
     date: null,
     trainingType: null,
     location: null, 
     minLevel: null,
+    verband: null,
   };
 
   function getTrainings() {
@@ -134,7 +136,7 @@
   <tbody>
     {#each trainings as training}
       <tr>
-        <td> <a href={`#/trainings/trainingsdetails/${training.id}`}>{training.description}</a></td>
+        <td> <a href={`#/trainingsdetails/${training.id}`}>{training.description}</a></td>
         <td>{training.trainingType}</td>
         <td>{training.date}</td>
         <td>{training.minLevel}</td>

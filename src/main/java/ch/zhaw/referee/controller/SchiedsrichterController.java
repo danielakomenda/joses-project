@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import ch.zhaw.referee.model.Schiedsrichter;
 import ch.zhaw.referee.model.SchiedsrichterCreateDTO;
 import ch.zhaw.referee.repository.SchiedsrichterRepository;
+import ch.zhaw.referee.repository.TrainingRepository;
 
 @RestController
 @RequestMapping("/api")
@@ -24,10 +25,12 @@ public class SchiedsrichterController {
 
     @Autowired
     SchiedsrichterRepository schiedsrichterRepository;
+    @Autowired
+    TrainingRepository trainingRepository;
 
     @PostMapping("/schiedsrichter")
     public ResponseEntity<Schiedsrichter> createSchiedsrichter(@RequestBody SchiedsrichterCreateDTO fDTO) {
-        Schiedsrichter fDAO = new Schiedsrichter(fDTO.getEmail(), fDTO.getName(), fDTO.getLevel());
+        Schiedsrichter fDAO = new Schiedsrichter(fDTO.getName(), fDTO.getEmail(), fDTO.getLevel());
         Schiedsrichter f = schiedsrichterRepository.save(fDAO);
         return new ResponseEntity<>(f, HttpStatus.CREATED);
     }

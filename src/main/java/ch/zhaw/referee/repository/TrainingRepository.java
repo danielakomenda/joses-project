@@ -6,7 +6,6 @@ import org.springframework.data.mongodb.repository.Aggregation;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 import ch.qos.logback.classic.Level;
-
 import ch.zhaw.referee.model.Training;
 import ch.zhaw.referee.model.TrainingStateAggregation;
 import ch.zhaw.referee.model.TrainingType;
