@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,17 +32,31 @@ public class TrainingController {
 
     @PostMapping("/training")
     public ResponseEntity<Training> createTraining(@RequestBody TrainingCreateDTO cDTO) {
-        Training jDAO = new Training(cDTO.getTrainingType(), cDTO.getDescription(),  cDTO.getLocation(), cDTO.getDate(), cDTO.getMinLevel(), cDTO.getMinParticipants());
+        Training jDAO = new Training(cDTO.getTrainingType(), cDTO.getDescription(), cDTO.getLocation(), cDTO.getDate(),
+                cDTO.getMinLevel(), cDTO.getMinParticipants());
         Training j = trainingRepository.save(jDAO);
         return new ResponseEntity<>(j, HttpStatus.CREATED);
     }
 
     @GetMapping("/training")
-    public ResponseEntity<List<Training>> getAllTrainings(
-            @RequestParam(required = false) Level min,
-            @RequestParam(required = false) TrainingType type) {
-        List<Training> allTrainings = trainingRepository.findAll();
-        return new ResponseEntity<>(allTrainings, HttpStatus.OK);
+    public ResponseEntity<Page<Training>> getAllTrainings(
+            @RequestParam(required = false) Level minLevel,
+            @RequestParam(required = false) TrainingType trainingsType,
+            @RequestParam(required = false, defaultValue = "1") Integer pageNumber,
+            @RequestParam(required = false, defaultValue = "2") Integer pageSize) {
+
+        Page<Training> trainings;
+        if (minLevel == null && trainingsType != null) {
+            trainings = trainingRepository.findByTrainingType(trainingsType, PageRequest.of(pageNumber - 1, pageSize));
+        } else if (minLevel != null && trainingsType == null) {
+            trainings = trainingRepository.findByminLevelGreaterThan(minLevel, PageRequest.of(pageNumber - 1, pageSize));
+        } else if (minLevel != null && trainingsType != null) {
+            trainings = trainingRepository.findByTrainingTypeAndMinLevelGreaterThan(trainingsType, minLevel,
+                    PageRequest.of(pageNumber - 1, pageSize));
+        } else {
+            trainings = trainingRepository.findAll(PageRequest.of(pageNumber - 1, pageSize));
+        }
+        return new ResponseEntity<>(trainings, HttpStatus.OK);
     }
 
     @GetMapping("/training/id/{id}")

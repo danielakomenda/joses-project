@@ -52,8 +52,10 @@
     }
 </script>
 
-
 <h1 class="mt-3">Schiedsrichter</h1>
+
+<!-- CREATE Schiedsrichter: SICHTBAR FÜR ALLE USER -->
+<h2>Schiedsrichter neu anlegen</h2>
 <form class="mb-5">
     <div class="row mb-3">
         <div class="col">
@@ -97,7 +99,10 @@
     </div>
 </form>
 
-<h1>Alle Schiedsrichter</h1>
+
+<!--{#if $user.user_roles && $user.user_roles.includes("admin")}-->
+<!-- LISTE VON Schiedsrichter: SICHTBAR FÜR ADMINS -->
+<h2>Alle Schiedsrichter</h2>
 <table class="table">
     <thead>
         <tr>
@@ -116,3 +121,4 @@
         {/each}
     </tbody>
 </table>
+<!--{/if}-->
