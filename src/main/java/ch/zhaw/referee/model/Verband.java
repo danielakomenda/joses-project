@@ -19,4 +19,6 @@ public class Verband {
     private String id;
     @NonNull
     private String region;
+    @NonNull
+    private String email;
 }

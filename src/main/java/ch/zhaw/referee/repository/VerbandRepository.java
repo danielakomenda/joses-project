@@ -7,4 +7,5 @@ import ch.zhaw.referee.model.Verband;
 
 public interface VerbandRepository extends MongoRepository<Verband, String> {
     Optional<Verband> findById(String id);
+    Verband findFirstByEmail(String email);
 }

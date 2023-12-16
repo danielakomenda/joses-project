@@ -8,4 +8,5 @@ import lombok.NoArgsConstructor;
 
 public class VerbandCreateDTO {
     private String region;
+    private String email;
 }
